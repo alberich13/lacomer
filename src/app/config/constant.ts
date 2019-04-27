@@ -1,0 +1,1 @@
+export const LACOMER_ENDPOINT: string = "";
