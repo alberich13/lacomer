@@ -1,58 +1,47 @@
-  <!-- Navigation -->
-  <!-- <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
-    <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top">Buscador de productos</a>
-      <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        Menu
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-        </ul>
-      </div>
-    </div>
-  </nav> -->
-
-  <!-- Header -->
-  <!-- <header class="masthead bg-primary text-white text-center">
-    <div class="container">
-      <h1 class="text-uppercase mb-0">Buscador de productos</h1>
-      <hr class="star-light">
-    </div>
-  </header> -->
-
-  <!-- Contact Section -->
-  <section id="contact">
-    <div class="container">
-      <h2 class="text-center text-uppercase text-secondary mb-0">Buscador de productos</h2>
-      <hr class="star-dark mb-5">
-      <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <form>
-            <div class="row">
+<!-- Contact Section -->
+<section id="contact">
+  <div class="container">
+    <h2 class="text-center text-uppercase text-secondary mb-0">Buscador de productos</h2>
+    <hr class="star-dark mb-5">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <form>
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Buscar por:" [(ngModel)]="searchText"
+                name="searchText">
+            </div>
+          </div>
+          <div class="row">
               <div class="col">
-                <input type="text" class="form-control" placeholder="Buscar por:" [(ngModel)]="searchText" name="searchText">
-                {{searchText}}
+                <p>Seleccione una sucursal</p>
+
+              </div>
+              <div class="col">
+                <select [(ngModel)]="selectedSucc" [ngModelOptions]="{standalone: true}">
+                  <option selected>TODAS</option>
+                  <option *ngFor="let succ of succArray" [ngValue]="succ">{{succ}}</option>
+                </select>
               </div>
             </div>
-            <div class="row">
-              <button type="button" class="btn btn-info btn-block" (click)="getProductsBySearchText()">Consultar</button>
-            </div>
-          </form>
-        </div>
+          <div class="row">
+            <button type="button" class="btn btn-info btn-block" (click)="getProductsBySearchText()">Consultar</button>
+          </div>
+        </form>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
 
 <div fxLayout="row" fxFlex.md="70" fxLayoutWrap class="card-deck-container mat-elevation-z4">
 
-  <div class="row" *ngFor="let row of productsDisplayed | paginate: { itemsPerPage: 3, currentPage: pageNumber }"
+  <div class="row" *ngFor="let row of productsDisplayed | paginate: { itemsPerPage: 2, currentPage: pageNumber }"
     class="card-item">
     <div class="row">
       <div fxFlex *ngFor="let product of row">
         <div class="col-6 col-sm-3">
-          <app-card  [product]="product"></app-card>
+          <app-card [product]="product"></app-card>
         </div>
       </div>
     </div>

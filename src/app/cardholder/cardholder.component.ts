@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../model/product';
 import { ProductService } from '../services/product.service';
+import { LACOMER_IMG_PREFIX, LACOMER_IMG_POSTFIX, LACOMER_SUCC_ARRAY } from '../config/constant';
 
 
 @Component({
@@ -11,31 +12,9 @@ import { ProductService } from '../services/product.service';
 export class CardholderComponent implements OnInit {
   public searchText: string;
   public pageNumber: 1;
-  public productsDisplayed: Array<Product[]>= [
-    [
-      {id: 1, name: "Producto1", description: "Descripcion",price: 100.1, image:""},
-      {id: 2, name: "Producto2", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto3", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto4", description: "Descripcion",price: 100.2, image:""}
-    ],
-    [
-      {id: 2, name: "Producto5", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto6", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto7", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto8", description: "Descripcion",price: 100.2, image:""},
-    ],
-    [
-      {id: 2, name: "Producto9", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto10", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto11", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto12", description: "Descripcion",price: 100.2, image:""},
-    ],
-    [
-      {id: 2, name: "Producto13", description: "Descripcion",price: 100.2, image:""},
-      {id: 2, name: "Producto14", description: "Descripcion",price: 100.2, image:""}
-    ]
-  ]
-
+  public productsDisplayed: Array<Product[]> = []
+  public succArray :number[] = LACOMER_SUCC_ARRAY;
+  public selectedSucc: string = "TODAS";
   constructor(
     private productService: ProductService
   ) { }
@@ -44,15 +23,34 @@ export class CardholderComponent implements OnInit {
   }
 
   async getProductsBySearchText() {
-    console.log("Buscar por: "+ this.searchText);
-    const responseText : any = await this.productService.getProductsBySearchText(this.searchText);
-    console.log(this.productsDisplayed);
+    this.productsDisplayed = []
+    console.log("Buscar por: " + this.searchText);
+    let responseText: any = await this.productService.getProductsBySearchTextAndSucc(this.searchText, this.selectedSucc);
 
-    this.productsDisplayed = await this.getProductsToDisplay(responseText);
+    const products = responseText["hits"]["hits"];
+    let productArray : Product[] = [];
+
+    for (let key in products) {
+      const source = products[key]["_source"];
+      const product: Product = this.getProductFromSource(source);
+      productArray.push(product);
+      const numberKey = Number(key) +1;
+      if(numberKey % 4 == 0 || numberKey == Object.keys(products).length){
+        this.productsDisplayed.push(productArray);
+        productArray = [];
+      }
+    }
   }
 
-  async getProductsToDisplay(responseText : any){
-
-    return null;
+  getProductFromSource(source: any) {
+    return new Product(
+      source["ART_DES"],
+      source["ART_PRES"],
+      source["MAR_DES"],
+      source["CATEGORIA"],
+      source["SUB_CATEGORIA"],
+      source["DES_PROVEEDOR"],
+      LACOMER_IMG_PREFIX+source["ART_EAN"]+LACOMER_IMG_POSTFIX
+    );
   }
 }
