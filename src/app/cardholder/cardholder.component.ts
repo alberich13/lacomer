@@ -32,17 +32,38 @@ export class CardholderComponent implements OnInit {
 
     for (let key in products) {
       const source = products[key]["_source"];
+      console.log("KEY: "+key+ " _ID: "+products[key]["_id"]+"  "+products[key]["_score"]);
+      for (let keyDos in products[key]["_source"]) {
+        if(!keyDos.includes("INVENTARIO")){
+          console.log("KEY: "+keyDos+"  VALUE: "+products[key]["_source"][keyDos]);
+        }
+      }
+      console.log("***********************************");
+    }
+
+    for (let key in products) {
+      const source = products[key]["_source"];
       const product: Product = this.getProductFromSource(source);
       productArray.push(product);
       const numberKey = Number(key) +1;
+
       if(numberKey % 4 == 0 || numberKey == Object.keys(products).length){
         this.productsDisplayed.push(productArray);
         productArray = [];
       }
     }
+    this.pageNumber = 1;
   }
 
   getProductFromSource(source: any) {
+    // if(this.selectedSucc == "TODAS"){
+    //   console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+    //   for(let k in source){
+    //     if(k.includes("INVENTARIO")){
+    //       console.log(k+" -- "+source[k]);
+    //     }
+    //   }
+    // }
     return new Product(
       source["ART_DES"],
       source["ART_PRES"],
@@ -50,7 +71,8 @@ export class CardholderComponent implements OnInit {
       source["CATEGORIA"],
       source["SUB_CATEGORIA"],
       source["DES_PROVEEDOR"],
-      LACOMER_IMG_PREFIX+source["ART_EAN"]+LACOMER_IMG_POSTFIX
+      LACOMER_IMG_PREFIX+source["ART_EAN"]+LACOMER_IMG_POSTFIX,
+      source["SUCC_"+this.selectedSucc+"_INVENTARIO"]
     );
   }
 }

@@ -6,6 +6,7 @@ export class Product {
     subCategoria: string;
     categoria: string;
     artEan: string;
+    inventario: string;
 
     constructor(
         artDes: string,
@@ -14,7 +15,8 @@ export class Product {
         categoria: string,
         subCategoria: string,
         desProveedor: string,
-        artEan: string
+        artEan: string,
+        inventario: string
     ) {
         this.artDes = artDes;
         this.artPres = artPres;
@@ -23,5 +25,6 @@ export class Product {
         this.categoria = categoria;
         this.desProveedor = desProveedor;
         this.artEan = artEan;
+        this.inventario = inventario;
     }
 }
